@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manajemen Film</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+  @include('partials/nav')
+
+  <main class="container mx-auto px-6 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-white">Manajemen Film</h1>
+      <a href="{{ route('films.create') }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-md">
+        + Tambah Film
+      </a>
+    </div>
+
+    @if(flashMessages.get('success'))
+      <div class="p-4 mb-4 text-sm text-green-300 bg-green-900 bg-opacity-50 rounded-lg border border-green-700">{{ flashMessages.get('success') }}</div>
+    @endif
+
+    <div class="bg-gray-800 shadow-lg rounded-lg overflow-x-auto border border-gray-700">
+      <table class="min-w-full leading-normal">
+        <thead>
+          <tr class="border-b border-gray-700">
+            <th class="px-5 py-3 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Poster</th>
+            <th class="px-5 py-3 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Judul</th>
+            <th class="px-5 py-3 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Sutradara</th>
+            <th class="px-5 py-3 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Tahun</th>
+            <th class="px-5 py-3 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Genre</th>
+            <th class="px-5 py-3 bg-gray-700 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(film in films)
+            <tr class="border-b border-gray-700 hover:bg-gray-700">
+              <td class="px-5 py-4">
+                @if(film.poster)
+                  <img src="{{ asset(film.poster) }}" class="w-16 h-24 rounded object-cover">
+                @else
+                  <div class="w-16 h-24 rounded bg-gray-700 flex items-center justify-center text-xs text-gray-500">N/A</div>
+                @endif
+              </td>
+              <td class="px-5 py-4 text-sm">{{ film.judul }}</td>
+              <td class="px-5 py-4 text-sm text-gray-400">{{ film.sutradara }}</td>
+              <td class="px-5 py-4 text-sm text-gray-400">{{ film.tahun }}</td>
+              <td class="px-5 py-4 text-sm text-gray-400">{{ film.genre.namaGenre }}</td>
+              <td class="px-5 py-4 text-sm text-right">
+                <a href="{{ route('films.edit', { id: film.id }) }}" class="text-indigo-400 hover:text-indigo-300 mr-4">Edit</a>
+                <form action="{{ route('films.destroy', { id: film.id }) }}?_method=DELETE" method="POST" class="inline-block" onsubmit="return confirm('Anda yakin ingin menghapus film ini?')">
+                  {{ csrfField() }}
+                  <button type="submit" class="text-pink-500 hover:text-pink-400">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          @else
+            <tr>
+              <td colspan="6" class="text-center py-10 text-gray-500">Tidak ada data film.</td>
+            </tr>
+          @endeach
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

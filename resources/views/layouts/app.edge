@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title || 'Manajemen Bioskop' }}</title>
+
+  {{-- Baris ini SANGAT PENTING. Ini akan memuat app.css yang sudah diproses --}}
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+</head>
+<body class="bg-gray-100 font-sans">
+
+  {{-- Kita akan memuat navigasi dari file terpisah --}}
+  @include('partials/nav')
+
+  <main class="container mx-auto px-6 py-8">
+    {{-- Tampilkan flash messages --}}
+    @if(flashMessages.get('error'))
+      <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+        {{ flashMessages.get('error') }}
+      </div>
+    @endif
+     @if(flashMessages.get('success'))
+      <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+        {{ flashMessages.get('success') }}
+      </div>
+    @endif
+
+    {{-- Konten utama halaman akan dirender di sini --}}
+    @!section('content')
+
+  </main>
+</body>
+</html>

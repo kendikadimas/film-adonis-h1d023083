@@ -1,0 +1,29 @@
+    <div class="space-y-4">
+        <div>
+            <label for="namaStudio" class="block text-sm font-medium text-gray-300">Nama Studio</label>
+            <input 
+                type="text" 
+                name="namaStudio" 
+                id="namaStudio" 
+                value="{{ old('namaStudio', studio?.namaStudio || '') }}" 
+                class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500"
+            >
+            @if(flashMessages.has('errors.namaStudio'))
+                <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.namaStudio') }}</p>
+            @endif
+        </div>
+        <div>
+            <label for="kapasitas" class="block text-sm font-medium text-gray-300">Kapasitas</label>
+            <input 
+                type="number" 
+                name="kapasitas" 
+                id="kapasitas" 
+                value="{{ old('kapasitas', studio?.kapasitas || '') }}" 
+                class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500"
+            >
+             @if(flashMessages.has('errors.kapasitas'))
+                <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.kapasitas') }}</p>
+            @endif
+        </div>
+    </div>
+    

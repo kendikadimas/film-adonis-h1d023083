@@ -1,0 +1,27 @@
+    <div class="space-y-4">
+        <div>
+            <label for="filmId" class="block text-sm font-medium text-gray-300">Film</label>
+            <select name="filmId" id="filmId" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+                @each(film in films)
+                    <option value="{{ film.id }}" {{ jadwal?.filmId == film.id ? 'selected' : '' }}>{{ film.judul }}</option>
+                @endeach
+            </select>
+        </div>
+        <div>
+            <label for="studioId" class="block text-sm font-medium text-gray-300">Studio</label>
+            <select name="studioId" id="studioId" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+                @each(studio in studios)
+                    <option value="{{ studio.id }}" {{ jadwal?.studioId == studio.id ? 'selected' : '' }}>{{ studio.namaStudio }}</option>
+                @endeach
+            </select>
+        </div>
+        <div>
+            <label for="tanggal" class="block text-sm font-medium text-gray-300">Tanggal</label>
+            <input type="date" name="tanggal" id="tanggal" value="{{ jadwal?.tanggal || '' }}" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+        </div>
+        <div>
+            <label for="jam" class="block text-sm font-medium text-gray-300">Jam</label>
+            <input type="time" name="jam" id="jam" value="{{ jadwal?.jam || '' }}" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+        </div>
+    </div>
+    

@@ -1,0 +1,26 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Tambah Genre Baru</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-900 text-gray-200 font-sans">
+      @include('partials/nav')
+      <main class="container mx-auto px-6 py-8">
+        <h1 class="text-2xl font-bold mb-6 text-white">Tambah Genre Baru</h1>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg border border-gray-700">
+          <form action="{{ route('genres.store') }}" method="POST">
+            {{ csrfField() }}
+            @include('pages/admin/genres/_form')
+            <div class="mt-6 flex justify-end space-x-4">
+              <a href="{{ route('genres.index') }}" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md">Batal</a>
+              <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-md">Simpan Genre</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </body>
+    </html>
+    

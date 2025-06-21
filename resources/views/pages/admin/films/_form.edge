@@ -1,0 +1,44 @@
+<div class="space-y-4">
+  <div>
+    <label for="judul" class="block text-sm font-medium text-gray-300">Judul</label>
+    <input type="text" name="judul" id="judul" value="{{ old('judul', film?.judul || '') }}" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+    @if(flashMessages.has('errors.judul'))
+      <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.judul') }}</p>
+    @endif
+  </div>
+  <div>
+    <label for="sutradara" class="block text-sm font-medium text-gray-300">Sutradara</label>
+    <input type="text" name="sutradara" id="sutradara" value="{{ old('sutradara', film?.sutradara || '') }}" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+     @if(flashMessages.has('errors.sutradara'))
+      <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.sutradara') }}</p>
+    @endif
+  </div>
+  <div>
+    <label for="tahun" class="block text-sm font-medium text-gray-300">Tahun</label>
+    <input type="number" name="tahun" id="tahun" value="{{ old('tahun', film?.tahun || '') }}" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+     @if(flashMessages.has('errors.tahun'))
+      <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.tahun') }}</p>
+    @endif
+  </div>
+  <div>
+    <label for="genreId" class="block text-sm font-medium text-gray-300">Genre</label>
+    <select name="genreId" id="genreId" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500">
+      @each(genre in genres)
+        <option value="{{ genre.id }}" {{ film?.genreId == genre.id ? 'selected' : '' }}>{{ genre.namaGenre }}</option>
+      @endeach
+    </select>
+     @if(flashMessages.has('errors.genreId'))
+      <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.genreId') }}</p>
+    @endif
+  </div>
+  <div>
+    <label for="poster" class="block text-sm font-medium text-gray-300">Poster</label>
+    <input type="file" name="poster" id="poster" class="mt-1 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-700">
+    @if(film?.poster)
+      <div class="mt-4">
+        <p class="text-xs text-gray-400 mb-2">Poster saat ini:</p>
+        <img src="{{ asset(film.poster) }}" class="h-32 w-auto rounded">
+      </div>
+    @endif
+  </div>
+</div>

@@ -1,0 +1,14 @@
+    <div>
+      <label for="namaGenre" class="block text-sm font-medium text-gray-300">Nama Genre</label>
+      <input 
+        type="text" 
+        name="namaGenre" 
+        id="namaGenre" 
+        value="{{ old('namaGenre', genre?.namaGenre || '') }}" 
+        class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:border-pink-500 focus:ring-pink-500"
+      >
+      @if(flashMessages.has('errors.namaGenre'))
+        <p class="text-red-400 text-xs mt-1">{{ flashMessages.get('errors.namaGenre') }}</p>
+      @endif
+    </div>
+    
