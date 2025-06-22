@@ -19,7 +19,15 @@ export default class AuthController {
     try {
       const user = await User.verifyCredentials(email, password)
       await auth.use('web').login(user)
-      return response.redirect().toRoute('dashboard')
+      
+      if (user.isAdmin) {
+        // Jika admin, arahkan ke manajemen film
+        return response.redirect().toRoute('films.index')
+      } else {
+        // Jika pengguna biasa, arahkan ke dashboard (jadwal tayang)
+        return response.redirect().toRoute('dashboard')
+      }
+
     } catch (error) {
       session.flash({ error: 'Email atau password salah.' })
       return response.redirect().back()

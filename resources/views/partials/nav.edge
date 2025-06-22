@@ -1,57 +1,58 @@
-{{-- Menggunakan warna latar gelap dengan efek blur untuk tampilan modern --}}
 <nav class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-800">
-    <div class="container mx-auto px-6 py-4">
-        <div class="flex items-center justify-between">
-            {{-- Logo/Branding --}}
-            <div class="text-xl font-bold text-white">
-                <a href="{{ route('dashboard') }}" class="hover:text-pink-500 transition-colors">CINEVISION</a>
-            </div>
+  <div class="container mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
 
-            {{-- Link Navigasi Utama --}}
-            <div class="hidden md:flex items-center space-x-8">
-                @if(auth.user)
-                    <a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Jadwal Tayang</a>
-                    <a href="{{ route('tickets.history') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Riwayat Tiket</a>
+      {{-- Logo --}}
+      <div class="text-xl font-bold text-white">
+        <a href="{{ route('dashboard') }}" class="hover:text-pink-500 transition-colors">CINEVISION</a>
+      </div>
 
-                    {{-- Menu dropdown untuk admin --}}
-                    @if(auth.user.isAdmin)
-                        <div class="relative group">
-                            <button class="text-gray-300 hover:text-pink-500 transition-colors">Manajemen</button>
-                            {{-- KUNCI PERBAIKAN: Menghapus class 'mt-2' untuk menghilangkan celah --}}
-                            <div class="absolute hidden group-hover:block bg-gray-800 text-left w-48 rounded-md shadow-lg py-2">
-                                <a href="{{ route('films.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Film</a>
-                                <a href="{{ route('jadwal.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Jadwal</a>
-                                <a href="{{ route('genres.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Genre</a>
-                                <a href="{{ route('studios.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Studio</a>
-                                <a href="{{ route('tickets.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Tiket Terjual</a>
-                            </div>
-                        </div>
-                    @endif
-                @endif
-            </div>
+      {{-- Navigasi Tengah --}}
+      <div class="hidden md:flex items-center space-x-8">
 
-            {{-- Navigasi Pengguna (Login/Logout) --}}
-            <div class="flex items-center space-x-4">
-                @if(auth.user)
-                    {{-- Dropdown untuk profil dan logout --}}
-                    <div class="relative group">
-                        <button class="text-white">Hi, {{ auth.user.fullName.split(' ')[0] }}</button>
-                         {{-- KUNCI PERBAIKAN: Menghapus class 'mt-2' untuk menghilangkan celah --}}
-                         <div class="absolute hidden group-hover:block bg-gray-800 text-left w-40 rounded-md shadow-lg py-2 right-0">
-                            {{-- Anda bisa menambahkan link ke profil di sini jika ada --}}
-                            <form action="{{ route('auth.logout') }}" method="POST" class="w-full">
-                                {{ csrfField() }}
-                                <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">Logout</button>
-                            </form>
-                         </div>
-                    </div>
-                @else
-                    <a href="{{ route('auth.login.create') }}" class="text-gray-300 hover:text-white">Login</a>
-                    <a href="{{ route('auth.register.create') }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-md transition-colors">
-                        Register
-                    </a>
-                @endif
+        {{-- Jika USER biasa --}}
+        @if(auth.user && !auth.user.isAdmin)
+          <a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Jadwal Tayang</a>
+          <a href="{{ route('tickets.history') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Riwayat Tiket</a>
+        @endif
+
+        {{-- Jika ADMIN --}}
+        @if(auth.user?.isAdmin)
+          <a href="{{ route('films.index') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Manajemen Film</a>
+          <a href="{{ route('jadwal.index') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Manajemen Jadwal</a>
+          <a href="{{ route('genres.index') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Manajemen Genre</a>
+          <a href="{{ route('studios.index') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Manajemen Studio</a>
+          <a href="{{ route('tickets.index') }}" class="text-gray-300 hover:text-pink-500 transition-colors">Tiket Terjual</a>
+        @endif
+
+        {{-- Tidak ada menu untuk yang belum login --}}
+      </div>
+
+      {{-- Navigasi Pengguna --}}
+      <div class="flex items-center space-x-4">
+        {{-- Jika sudah login --}}
+        @if(auth.user)
+          <div class="relative group">
+            <button class="text-white">Hi, {{ auth.user.fullName.split(' ')[0] }}</button>
+            <div class="absolute hidden group-hover:block bg-gray-800 text-left w-40 rounded-md shadow-lg py-2 right-0">
+              <form action="{{ route('auth.logout') }}" method="POST" class="w-full">
+                {{ csrfField() }}
+                <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-gray-300 hover:bg-pink-600 hover:text-white">
+                  Logout
+                </button>
+              </form>
             </div>
-        </div>
+          </div>
+        @else
+          {{-- Jika belum login --}}
+          <a href="{{ route('auth.login.create') }}" class="text-gray-300 hover:text-white">Login</a>
+          <a href="{{ route('auth.register.create') }}"
+             class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-md transition-colors">
+            Register
+          </a>
+        @endif
+      </div>
+
     </div>
+  </div>
 </nav>

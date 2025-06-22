@@ -1,69 +1,75 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import Film from '#models/film'
 import JadwalTayang from '#models/jadwal_tayang'
-import Genre from '#models/genre'
 import Tiket from '#models/tiket'
+import Genre from '#models/genre' // Pastikan Genre di-import
 import { DateTime } from 'luxon'
 
 export default class PagesController {
   /**
-   * Menampilkan halaman utama (dashboard) dengan jadwal film.
+   * Menampilkan halaman utama dengan galeri film yang dapat difilter.
    */
   async home({ view, request }: HttpContext) {
     const selectedDate = request.input('selectedDate', DateTime.now().toISODate())
-    const selectedGenre = request.input('selectedGenre', '')
+    const selectedGenre = request.input('selectedGenre')
 
-    const jadwalQuery = JadwalTayang.query()
-      .where('tanggal', selectedDate)
-      .preload('film', (filmQuery) => {
-        filmQuery.preload('genre')
-      })
-      .preload('studio')
-      .preload('tikets')
+    // Mulai query untuk Film
+    const filmsQuery = Film.query()
 
+    // Terapkan filter genre jika ada
     if (selectedGenre) {
-      jadwalQuery.whereHas('film', (filmQuery) => {
-        filmQuery.where('genre_id', selectedGenre)
-      })
+      filmsQuery.where('genre_id', selectedGenre)
     }
-    
-    const jadwals = await jadwalQuery.orderBy('jam', 'asc')
 
-    const jadwalsByFilm = jadwals.reduce((acc, jadwal) => {
-      const filmJudul = jadwal.film.judul
-      if (!acc[filmJudul]) {
-        acc[filmJudul] = {
-          judul: filmJudul,
-          jadwals: []
-        }
-      }
-      acc[filmJudul].jadwals.push(jadwal)
-      return acc
-    }, {})
+    // Terapkan filter tanggal
+    // Hanya tampilkan film yang memiliki jadwal tayang pada tanggal yang dipilih
+    filmsQuery.whereHas('jadwalTayangs', (jadwalQuery) => {
+      jadwalQuery.where('tanggal', selectedDate)
+    })
 
+    const films = await filmsQuery.orderBy('created_at', 'desc')
     const genres = await Genre.all()
 
     return view.render('pages/dashboard', {
-      jadwalsByFilm: Object.values(jadwalsByFilm),
+      films,
       genres,
       selectedDate,
       selectedGenre,
     })
+  }
+
+  /**
+   * Menampilkan detail dan jadwal untuk satu film spesifik.
+   */
+  async showSchedules({ params, view }: HttpContext) {
+    const film = await Film.findOrFail(params.id)
+    await film.load('genre')
+
+    const jadwals = await JadwalTayang.query()
+      .where('film_id', film.id)
+      .preload('studio')
+      .preload('tikets')
+      .orderBy('tanggal', 'asc')
+      .orderBy('jam', 'asc')
+      .exec()
+
+    return view.render('pages/film_schedules', { film, jadwals })
   }
   
   /**
    * Menangani proses pembelian tiket.
    */
   async buyTicket({ params, auth, response, session }: HttpContext) {
-    // KUNCI PERBAIKAN: Tambahkan .preload('film') di sini
     const jadwal = await JadwalTayang.query()
       .where('id', params.id)
       .preload('studio')
-      .preload('tikets')
-      .preload('film') // <-- Baris ini akan memperbaiki error
+      .preload('film')
       .firstOrFail()
 
     const user = auth.user!
-
+    
+    await jadwal.load('tikets')
+    
     if (jadwal.tiketTersedia <= 0) {
       session.flash('error', 'Maaf, tiket untuk jadwal ini sudah habis.')
       return response.redirect().back()
@@ -90,6 +96,7 @@ export default class PagesController {
         jadwalQuery.preload('film').preload('studio')
       })
       .orderBy('created_at', 'desc')
+      .exec()
 
     return view.render('pages/tickets_history', { tikets })
   }
